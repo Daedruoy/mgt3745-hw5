@@ -1,0 +1,16 @@
+{
+  "name": "mgt3745-hw5",
+  "private": true,
+  "description": "MGT 3745 O HW5: delegated feature, evals, and DDRs on the HW4 Worker app",
+  "scripts": {
+    "db:create": "wrangler d1 create mgt3745-entries",
+    "db:schema": "wrangler d1 execute mgt3745-entries --remote --file=schema.sql",
+    "db:export": "wrangler d1 export mgt3745-entries --remote --output=backup.sql",
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "test": "node --test evals/"
+  },
+  "devDependencies": {
+    "wrangler": "^4"
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "name": "MGT 3745 O",
+  "image": "mcr.microsoft.com/devcontainers/javascript-node:22",
+  "customizations": {
+    "vscode": {
+      "extensions": ["ritwickdey.LiveServer", "GitHub.copilot"]
+    }
+  },
+  "postCreateCommand": "sudo apt-get update && sudo apt-get install -y xdg-utils && npm install",
+  "forwardPorts": [5500, 8787]
+}

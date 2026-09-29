@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Entries</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <main>
+    <h1>Entries</h1>
+    <p class="lede">Replace this heading and copy with your HW3 feature. Structure lives here; presentation in styles.css; behavior and data in app.js.</p>
+
+    <form id="entry-form">
+      <label for="entry-text">New entry</label>
+      <input id="entry-text" name="text" type="text" autocomplete="off" required>
+      <button type="submit">Save</button>
+    </form>
+
+    <p id="status" class="status" role="status" aria-live="polite"></p>
+
+    <ul id="entry-list" aria-label="Saved entries"></ul>
+  </main>
+  <script src="app.js"></script>
+</body>
+</html>
