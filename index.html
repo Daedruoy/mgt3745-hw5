@@ -1,26 +1,57 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Entries</title>
+  <title>Nu Mu Chapter Updates</title>
   <link rel="stylesheet" href="styles.css">
+  <script src="app.js" defer></script>
 </head>
 <body>
   <main>
-    <h1>Entries</h1>
-    <p class="lede">Replace this heading and copy with your HW3 feature. Structure lives here; presentation in styles.css; behavior and data in app.js.</p>
+    <h1>Nu Mu Chapter Updates</h1>
+    <p>Post a time-sensitive update here instead of only in the group chat, so it doesn't get buried. </p>
 
-    <form id="entry-form">
-      <label for="entry-text">New entry</label>
-      <input id="entry-text" name="text" type="text" autocomplete="off" required>
-      <button type="submit">Save</button>
+    <form id="update-form" novalidate>
+      <label for="chair-name-input">Your name</label>
+      <input id="chair-name-input" name="chairName" type="text" aria-describedby="chair-name-error" autocomplete="off">
+      <p id="chair-name-error" role="alert"></p>
+
+      <label for="chair-position-input">Your chapter position</label>
+      <input id="chair-position-input" name="chairPosition" type="text" aria-describedby="chair-position-error" autocomplete="off">
+      <p id="chair-position-error" role="alert"></p>
+
+      <label for="initiative-select">Initiative</label>
+      <select id="initiative-select" name="initiative" aria-describedby="initiative-error">
+        <option value="">Select one</option>
+        <option value="stepshow">Homecoming Stepshow</option>
+        <option value="pageant">Scholarship Pageant</option>
+        <option value="general">General Events</option>
+        <option value="brotherhood">Brotherhood</option>
+        <option value="national">National</option>
+      </select>
+      <p id="initiative-error" role="alert"></p>
+
+      <label for="update-title-input">Update</label>
+      <p id="update-title-help">Enter 1–200 characters. Say what's happening and what a brother needs to do.</p>
+      <input id="update-title-input" name="updateTitle" type="text" aria-describedby="update-title-help update-title-error" autocomplete="off">
+      <p id="update-title-error" role="alert"></p>
+
+      <label for="event-date-input">Event or deadline date</label>
+      <input id="event-date-input" name="eventDate" type="date" aria-describedby="event-date-error">
+      <p id="event-date-error" role="alert"></p>
+
+      <button type="submit">Post update</button>
+      <p id="save-status" role="status" aria-live="polite"></p>
     </form>
 
-    <p id="status" class="status" role="status" aria-live="polite"></p>
+    <h2>Current updates</h2>
+    <p id="current-empty-state">No updates posted in the last two weeks.</p>
+    <ul id="current-update-list" aria-label="Updates from the past two weeks"></ul>
 
-    <ul id="entry-list" aria-label="Saved entries"></ul>
+    <h2>Older updates</h2>
+    <p id="older-empty-state">No older updates.</p>
+    <ul id="older-update-list" aria-label="Updates older than two weeks"></ul>
   </main>
-  <script src="app.js"></script>
 </body>
 </html>

@@ -3,6 +3,10 @@
 -- A second table is ADR-003 territory.
 CREATE TABLE IF NOT EXISTS entries (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
-  text TEXT NOT NULL,
+  chair_name TEXT NOT NULL,
+  chair_position TEXT NOT NULL,
+  initiative TEXT NOT NULL,
+  update_title TEXT NOT NULL,
+  event_date TEXT NOT NULL,
   created_at TEXT DEFAULT CURRENT_TIMESTAMP
 );

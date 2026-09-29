@@ -12,10 +12,10 @@ what crosses, to whom, and who is accountable.
 
 | Service | Trusted with | Credentials live | Crossing statement | Switching cost |
 |---|---|---|---|---|
-| Cloudflare Workers + D1 | Every entry a user types; request metadata (IP, timestamp) that Cloudflare logs by default | Cloudflare dashboard login; wrangler token inside the Codespace | "User entries leave the browser and are stored on D1 under Cloudflare's free-tier terms, in a region I did not choose. I am accountable." | Medium: `wrangler d1 export`, rewrite one Worker for another host |
-| GitHub + Codespaces | Source, commit history, devcontainer | GitHub account (SSO) | *write yours* | *Low / Medium / High, plus the one action required to leave* |
-| GitHub Copilot | Everything in the repository, as context for suggestions | GitHub account | *write yours* | |
-| wrangler (npm) | *what does an npm package receive?* | *none, but it holds the login token above* | *write yours; the event-stream debate applies here* | |
+| Cloudflare Workers + D1 | Every chapter update a chair submits (name, position, initiative, title, event date); request metadata (IP, timestamp) Cloudflare logs by default | Cloudflare dashboard login; wrangler device-auth token inside this Codespace | Chapter updates a chair types leave the browser and are stored on D1 under Cloudflare's free-tier terms, in a region I did not choose. I am accountable for what happens to that data. | Medium: export with `wrangler d1 export`, rewrite the Worker for another host |
+| GitHub + Codespaces | Source code, commit history, the devcontainer configuration | GitHub account login; SSO | All code and history are on GitHub. Template repos mean no product dependency beyond git itself. | Low: git clone anywhere |
+| Copilot | Repo contents, including worker.js and every context file, as context for suggestions | GitHub account | Everything in this repository may be sent to Copilot as context on every task. No secrets belong in the repo, ever, because of this. | Low: turn it off |
+| wrangler (npm) | Nothing of mine directly; it holds my Cloudflare auth token locally and executes deploy/database commands on my behalf | Device-auth token stored locally by wrangler after login | wrangler is a third-party npm package with its own maintainers; every deploy and database command in this project runs through code I did not write and have not audited. I am accountable for trusting it. | Low: it's a CLI tool, no data lock-in beyond the Cloudflare account itself |
 
 ## Revisit triggers
 

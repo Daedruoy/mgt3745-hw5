@@ -1,9 +1,6 @@
 // worker.js
 // The whole server. Read it before you deploy it.
 //
-// One function. Cloudflare calls it with every request that reaches your
-// workers.dev URL and sends back whatever Response you return.
-//
 // Four things to recognize here, because you will need to recognize them
 // later in code you did not write:
 //   env.DB      the D1 binding from wrangler.toml (no connection string, nothing to leak)
@@ -37,7 +34,6 @@ async function handle(request, env) {
 
   // Browsers send an OPTIONS "preflight" before a JSON POST from another
   // origin. Answer it with the CORS headers and nothing else.
-  // (Not on the Session B slide; it is the one line the slide left out.)
   if (request.method === "OPTIONS") {
     return new Response(null, { status: 204, headers: CORS });
   }
@@ -63,14 +59,37 @@ async function handle(request, env) {
     } catch {
       return new Response("body must be JSON", { status: 400, headers: CORS });
     }
-    if (!body.text) {
-      return new Response("text required", { status: 400, headers: CORS });
+
+    // Validation rule, traces to FEATURES.md: every field is required on
+    // submission (matches the client-side validateForm checks already in
+    // app.js). Names which field is missing, per the assignment's "return
+    // 400 with a message naming the problem."
+    const requiredFields = [
+      ["chairName", "chair name"],
+      ["chairPosition", "chair position"],
+      ["initiative", "initiative"],
+      ["updateTitle", "update title"],
+      ["eventDate", "event date"],
+    ];
+    for (const [key, label] of requiredFields) {
+      if (!body[key] || typeof body[key] !== "string" || body[key].trim() === "") {
+        return new Response(`${label} required`, { status: 400, headers: CORS });
+      }
     }
-    // HW4 Part 3: add one more validation rule here that traces to an
-    // EARS unwanted-behavior statement in your FEATURES.md.
-    await env.DB.prepare("INSERT INTO entries (text) VALUES (?)")
-      .bind(body.text).run();
-    return new Response(null, { status: 201, headers: CORS });
+
+    const { results } = await env.DB.prepare(
+      `INSERT INTO entries (chair_name, chair_position, initiative, update_title, event_date)
+       VALUES (?, ?, ?, ?, ?)
+       RETURNING id, chair_name, chair_position, initiative, update_title, event_date, created_at`
+    ).bind(
+      body.chairName.trim(),
+      body.chairPosition.trim(),
+      body.initiative.trim(),
+      body.updateTitle.trim(),
+      body.eventDate.trim()
+    ).all();
+
+    return Response.json(results[0], { status: 201, headers: CORS });
   }
 
   return new Response("not found", { status: 404, headers: CORS });

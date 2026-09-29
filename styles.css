@@ -2,62 +2,61 @@
    Presentation only. The tokens below should match context/STYLE.md;
    when you change one, change both. */
 :root {
-  --color-primary: #051E39;
-  --color-accent: #B39051;
-  --color-background: #FFFFFF;
-  --color-text: #1A1A1A;
-  --color-error: #9B2C2C;
-  --font-body: Roboto, Arial, sans-serif;
-  --font-heading: "Roboto Slab", Georgia, serif;
-  --space-unit: 8px;
-  --radius: 4px;
+  --color-black: #0d0d0d;
+  --color-old-gold: #a8842c;
+  --color-old-gold-dark: #8a6b1f;
+  --color-cream: #f7f1de;
+  --color-cream-line: #ddd0a8;
+  --color-error: #922020;
+  font-family: Arial, Helvetica, sans-serif;
+  color: var(--color-black);
+  background: var(--color-cream);
 }
-* { box-sizing: border-box; }
-body {
-  margin: 0;
-  font-family: var(--font-body);
-  font-size: 16px;
-  color: var(--color-text);
-  background: var(--color-background);
-}
-main {
-  max-width: 640px;
-  margin: 0 auto;
-  padding: calc(var(--space-unit) * 4) calc(var(--space-unit) * 2);
-}
-h1 {
-  font-family: var(--font-heading);
-  color: var(--color-primary);
-  margin: 0 0 var(--space-unit) 0;
-}
-.lede { color: #555; margin: 0 0 calc(var(--space-unit) * 3) 0; }
-form { display: flex; flex-wrap: wrap; gap: var(--space-unit); align-items: end; }
-label { flex-basis: 100%; font-weight: bold; }
-input {
-  flex: 1;
-  min-width: 200px;
-  padding: var(--space-unit);
+body { margin: 0; }
+main { max-width: 44rem; margin: 2rem auto; padding: 0 1.25rem; }
+h1 { font-size: 2rem; color: var(--color-black); }
+h2 { font-size: 1.4rem; margin-top: 2rem; border-bottom: 2px solid var(--color-old-gold); padding-bottom: 0.3rem; }
+p { line-height: 1.5; }
+label { display: block; font-weight: 700; margin-top: 1rem; }
+input, select {
+  box-sizing: border-box;
+  display: block;
+  width: 100%;
   font: inherit;
-  border: 1px solid #BBB;
-  border-radius: var(--radius);
+  padding: 0.8rem;
+  border: 1px solid var(--color-black);
+  border-radius: 0.3rem;
+  background: #fff;
 }
 button {
-  padding: var(--space-unit) calc(var(--space-unit) * 2);
+  min-height: 44px;
+  margin: 0.75rem 0;
+  padding: 0.6rem 1rem;
   font: inherit;
-  color: #fff;
-  background: var(--color-primary);
-  border: 0;
-  border-radius: var(--radius);
+  font-weight: 700;
+  background: var(--color-old-gold);
+  color: var(--color-black);
+  border: 2px solid var(--color-old-gold-dark);
+  border-radius: 0.3rem;
   cursor: pointer;
 }
-button:hover { background: #0a2f5a; }
-.status { min-height: 1.5em; margin: var(--space-unit) 0; color: var(--color-error); }
-ul { list-style: none; padding: 0; margin: calc(var(--space-unit) * 2) 0 0 0; }
-li {
-  padding: var(--space-unit) 0;
-  border-bottom: 1px solid #E5E5E5;
-  display: flex;
-  justify-content: space-between;
-  gap: var(--space-unit);
+button:hover { background: var(--color-old-gold-dark); color: #fff; }
+button:focus-visible, input:focus-visible, select:focus-visible {
+  outline: 3px solid var(--color-old-gold-dark);
+  outline-offset: 3px;
 }
-li time { color: #777; font-size: 14px; white-space: nowrap; }
+input[aria-invalid="true"], select[aria-invalid="true"] { border: 2px solid var(--color-error); }
+[id$="-error"] { color: var(--color-error); }
+
+#current-update-list, #older-update-list { padding: 0; list-style: none; }
+#current-update-list li, #older-update-list li {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  padding: 0.6rem 0;
+  border-bottom: 1px solid var(--color-cream-line);
+}
+.update-text { flex: 1 1 15rem; overflow-wrap: anywhere; line-height: 1.5; }
+.update-meta { font-size: 0.85rem; color: var(--color-old-gold-dark); display: block; margin-top: 0.2rem; }

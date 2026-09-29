@@ -4,18 +4,15 @@ The verification table from HW3, grown up. Five sections, in this order.
 The first two are written and committed BEFORE any tool sees the spec.
 
 ## 1. RAT statement
-<!-- One sentence. The assumption that, if false, makes this build pointless,
-     and what would show it is false. -->
-The riskiest assumption in delegating <feature> is that ...
+The riskiest assumption in delegating F-07 to bolt.new is that it will implement status updates by calling my existing Worker rather than inventing its own client-side storage for completion state. If it invents parallel storage instead of using D1, the feature will not actually solve the problem, since status would not persist or sync the way ADR-002 requires, and the delegation would cost more review and rework time than building it by hand.
 
-## 2. Prediction Stake (before build, <date and time>)
-<!-- At least one of each. Never edit the prediction text; add resolutions below it. -->
-- **Tight:** At least _ of _ EARS rows will pass on the tool's first output.
-  - Resolved <date>: _ of _.
-- **Loose:** bolt will follow STYLE.md tokens better than AI Studio.
-  - Resolved <date>: ...
-- **Open:** The tool will introduce a dependency I did not ask for. Resolves when I read package.json.
-  - Resolved <date>: ...
+## 2. Prediction Stake (before build, 2026-09-29 15:47)
+- **Tight:** At least 3 of 4 EARS rows for F-07 will pass on bolt's first output.
+  - Resolved [date]: _ of 4.
+- **Loose:** bolt will follow STYLE.md's color and spacing tokens more accurately than AI Studio does on the same prompt.
+  - Resolved [date]: ...
+- **Open:** bolt will introduce a dependency I did not ask for.
+  - Resolved when I read package.json.
 
 ## 3. Success criteria
 | EARS row (feature) | Checked by | Where |
