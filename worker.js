@@ -12,7 +12,7 @@
 // HW4 Craft credit: replace "*" with your page's origin once it is deployed.
 const CORS = {
   "access-control-allow-origin": "*",
-  "access-control-allow-methods": "GET, POST, OPTIONS",
+  "access-control-allow-methods": "GET, POST, PATCH, OPTIONS",
   "access-control-allow-headers": "content-type",
 };
 
@@ -90,6 +90,51 @@ async function handle(request, env) {
     ).all();
 
     return Response.json(results[0], { status: 201, headers: CORS });
+  }
+
+  // PATCH /entries/:id/status — F-07: a chair marks their own update completed.
+  // Ownership check is a soft check (name comparison, not real authentication),
+  // since this project has no auth system; the DDR should say so plainly.
+  const statusMatch = url.pathname.match(/^\/entries\/(\d+)\/status$/);
+  if (request.method === "PATCH" && statusMatch) {
+    const entryId = statusMatch[1];
+
+    let body;
+    try {
+      body = await request.json();
+    } catch {
+      return new Response("body must be JSON", { status: 400, headers: CORS });
+    }
+
+    if (!body.status || (body.status !== "pending" && body.status !== "completed")) {
+      return new Response("status must be 'pending' or 'completed'", { status: 400, headers: CORS });
+    }
+
+    if (!body.chairName || typeof body.chairName !== "string" || body.chairName.trim() === "") {
+      return new Response("chair name required to verify ownership", { status: 400, headers: CORS });
+    }
+
+    const { results: existing } = await env.DB.prepare(
+      "SELECT chair_name FROM entries WHERE id = ?"
+    ).bind(entryId).all();
+
+    if (existing.length === 0) {
+      return new Response("entry not found", { status: 404, headers: CORS });
+    }
+
+    // Soft ownership check: compares submitted name to stored chair_name.
+    // Not real authentication. A chair could type someone else's name to
+    // bypass this. Documented as a known limitation in DDR-001.
+    if (existing[0].chair_name.trim() !== body.chairName.trim()) {
+      return new Response("only the chair who submitted this update may change its status", { status: 403, headers: CORS });
+    }
+
+    const { results } = await env.DB.prepare(
+      `UPDATE entries SET status = ? WHERE id = ?
+       RETURNING id, chair_name, chair_position, initiative, update_title, event_date, created_at, status`
+    ).bind(body.status.trim(), entryId).all();
+
+    return Response.json(results[0], { headers: CORS });
   }
 
   return new Response("not found", { status: 404, headers: CORS });

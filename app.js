@@ -75,6 +75,28 @@
     }
   }
 
+  // F-07: Persists a status change via the real PATCH endpoint. Requires the
+  // chair's name to satisfy the Worker's ownership check; this is a soft
+  // check (name comparison, not authentication) and can be bypassed by
+  // anyone who knows the original chair's name. Documented as a known
+  // limitation in DDR-001.
+  async function postStatusUpdate(entryId, newStatus, chairName) {
+    try {
+      const res = await fetch(`${API}/entries/${entryId}/status`, {
+        method: "PATCH",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ status: newStatus, chairName })
+      });
+      if (!res.ok) {
+        const reason = await res.text();
+        return { ok: false, reason: reason || String(res.status) };
+      }
+      return { ok: true };
+    } catch {
+      return { ok: false, reason: "could not reach the server" };
+    }
+  }
+
   // Splits updates by submission recency, using the server-assigned created_at
   // rather than the event or deadline date. Matches the FEATURES.md acceptance
   // criterion: this addresses updates getting buried under newer posts, not
@@ -95,6 +117,56 @@
     return { current, older };
   }
 
+  // F-07: Builds the status badge element. Shows "Completed" for completed
+  // items and "Pending" for items with no recorded status, matching the
+  // FEATURES.md acceptance wording exactly.
+  function buildStatusBadge(update) {
+    const badge = document.createElement('span');
+    if (update.status === 'completed') {
+      badge.className = 'update-status-badge completed';
+      badge.textContent = 'Completed';
+    } else {
+      badge.className = 'update-status-badge pending';
+      badge.textContent = 'Pending';
+    }
+    return badge;
+  }
+
+  // F-07: Builds the "Mark completed" button. Only rendered for updates not
+  // already completed. The button is a 44px+ tap target per Fitts's Law
+  // (STYLE.md refusal 2).
+  function buildMarkCompleteButton(update) {
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'mark-complete-btn';
+    btn.textContent = 'Mark completed';
+    btn.addEventListener('click', () => handleMarkComplete(update, btn));
+    return btn;
+  }
+
+  // F-07: Handles the mark-complete interaction. Confirms the chair's name
+  // client-side before sending, since the Worker rejects a mismatched name
+  // with 403. Shows an inline message on failure and disables the button
+  // while the request is in flight so a chair can't double-submit.
+  async function handleMarkComplete(update, btn) {
+    const chairName = window.prompt(
+      `Confirm your name to mark this update completed (must match "${update.chair_name}"):`
+    );
+    if (!chairName) return;
+
+    btn.disabled = true;
+    btn.textContent = 'Saving…';
+    const result = await postStatusUpdate(update.id, 'completed', chairName.trim());
+    if (!result.ok) {
+      btn.disabled = false;
+      btn.textContent = 'Mark completed';
+      saveStatus.textContent = 'Could not save status change: ' + result.reason;
+      return;
+    }
+    saveStatus.textContent = 'Update marked as completed.';
+    await refresh();
+  }
+
   function buildUpdateListItem(update) {
     const listItem = document.createElement('li');
 
@@ -111,7 +183,15 @@
     metaText.textContent = `${initiativeLabel(update.initiative)} · Posted by ${update.chair_name}, ${update.chair_position}, on ${postedDate} · ${eventDateDisplay}`;
 
     textWrap.append(titleText, metaText);
-    listItem.append(textWrap);
+
+    const actions = document.createElement('div');
+    actions.className = 'update-actions';
+    actions.append(buildStatusBadge(update));
+    if (update.status !== 'completed') {
+      actions.append(buildMarkCompleteButton(update));
+    }
+
+    listItem.append(textWrap, actions);
     return listItem;
   }
 

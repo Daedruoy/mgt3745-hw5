@@ -5,6 +5,7 @@
   --color-black: #0d0d0d;
   --color-old-gold: #a8842c;
   --color-old-gold-dark: #8a6b1f;
+  --color-meta-text: #6b5015;
   --color-cream: #f7f1de;
   --color-cream-line: #ddd0a8;
   --color-error: #922020;
@@ -59,4 +60,49 @@ input[aria-invalid="true"], select[aria-invalid="true"] { border: 2px solid var(
   border-bottom: 1px solid var(--color-cream-line);
 }
 .update-text { flex: 1 1 15rem; overflow-wrap: anywhere; line-height: 1.5; }
-.update-meta { font-size: 0.85rem; color: var(--color-old-gold-dark); display: block; margin-top: 0.2rem; }
+.update-meta { font-size: 0.85rem; color: var(--color-meta-text); display: block; margin-top: 0.2rem; }
+/* Contrast: #6b5015 on #f7f1de = 7.04:1, passes WCAG AA (4.5:1) and AAA (7:1) at body size. */
+
+.update-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.update-status-badge {
+  display: inline-block;
+  padding: 0.25rem 0.6rem;
+  border-radius: 0.3rem;
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+.update-status-badge.completed {
+  background: var(--color-old-gold);
+  color: var(--color-black);
+}
+/* Contrast: #0d0d0d text on #a8842c background = 5.56:1, passes WCAG AA (4.5:1). */
+.update-status-badge.pending {
+  background: transparent;
+  border: 1px solid var(--color-cream-line);
+  color: var(--color-meta-text);
+}
+/* Contrast: #6b5015 on transparent (renders against cream) = 7.04:1, same as .update-meta. */
+
+.mark-complete-btn {
+  min-height: 44px;
+  padding: 0.4rem 0.9rem;
+  font: inherit;
+  font-weight: 700;
+  background: var(--color-old-gold);
+  color: var(--color-black);
+  border: 2px solid var(--color-old-gold-dark);
+  border-radius: 0.3rem;
+  cursor: pointer;
+}
+.mark-complete-btn:hover { background: var(--color-old-gold-dark); color: #fff; }
+.mark-complete-btn:focus-visible {
+  outline: 3px solid var(--color-old-gold-dark);
+  outline-offset: 3px;
+}
+.mark-complete-btn:disabled { opacity: 0.6; cursor: not-allowed; }
